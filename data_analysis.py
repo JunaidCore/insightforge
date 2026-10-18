@@ -180,6 +180,20 @@ def get_percentage_of_total(df: pd.DataFrame, column: str) -> list:
     return [None if pd.isna(value) else round(float(value), 2) for value in shares]
 
 
+def get_yearly_totals(df: pd.DataFrame, date_column: str, value_column: str) -> dict:
+    """Return the total value per year, ignoring rows with invalid dates."""
+    _validate_numeric_column(df, value_column)
+
+    if date_column not in df.columns:
+        raise KeyError(f"Column not found: {date_column}")
+
+    dates = pd.to_datetime(df[date_column], errors="coerce")
+    valid = dates.notna()
+    totals = df.loc[valid, value_column].groupby(dates[valid].dt.year).mean()
+
+    return {int(year): round(float(total), 2) for year, total in totals.items()}
+
+
 def get_quartiles(df: pd.DataFrame, column: str) -> dict:
     """Return the 25th, 50th and 75th percentiles of a numeric column."""
     _validate_numeric_column(df, column)
