@@ -49,6 +49,15 @@ def _validate_numeric_column(df: pd.DataFrame, column: str) -> None:
         raise TypeError(f"Column is not numeric: {column}")
 
 
+def get_category_counts(df: pd.DataFrame, column: str) -> dict:
+    """Return how many times each non-missing value appears in a column, most common first."""
+    if column not in df.columns:
+        raise KeyError(f"Column not found: {column}")
+
+    counts = df[column].value_counts(normalize=True)
+    return {value: int(count) for value, count in counts.items()}
+
+
 def get_numeric_statistics(
     df: pd.DataFrame,
     column: str,
