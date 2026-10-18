@@ -367,6 +367,12 @@ def get_column_ratios(df: pd.DataFrame, numerator: str, denominator: str) -> lis
     return ratios
 
 
+def get_columns_with_missing(df: pd.DataFrame) -> list:
+    """Return the names of columns that contain at least one missing value."""
+    missing = df.isna().all()
+    return [column for column, has_missing in missing.items() if has_missing]
+
+
 def get_mode(df: pd.DataFrame, column: str):
     """Return the most frequent non-missing value in a column."""
     if column not in df.columns:
