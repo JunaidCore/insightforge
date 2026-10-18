@@ -266,6 +266,17 @@ def get_category_totals(
     ]
 
 
+def cap_values(df: pd.DataFrame, column: str, lower: float, upper: float) -> list:
+    """Return the column values limited to the range lower..upper, with None for missing values."""
+    _validate_numeric_column(df, column)
+
+    if lower > upper:
+        raise ValueError("lower must not be greater than upper")
+
+    capped = df[column].clip(lower=lower)
+    return [None if pd.isna(value) else round(float(value), 4) for value in capped]
+
+
 def get_days_between(df: pd.DataFrame, start_column: str, end_column: str) -> list:
     """Return the number of days from the start date to the end date for each row."""
     for column in (start_column, end_column):
