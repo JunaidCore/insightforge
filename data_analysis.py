@@ -327,6 +327,17 @@ def get_missing_value_percentages(df: pd.DataFrame) -> dict:
     return {column: round(float(value), 2) for column, value in percentages.items()}
 
 
+def get_rolling_sum(df: pd.DataFrame, column: str, window: int = 3) -> list:
+    """Return the rolling total of a numeric column over the given window size."""
+    _validate_numeric_column(df, column)
+
+    if window < 1:
+        raise ValueError("Window must be at least 1")
+
+    totals = df[column].rolling(window=window).mean()
+    return [None if pd.isna(value) else round(float(value), 2) for value in totals]
+
+
 def get_average_by_category(
     df: pd.DataFrame,
     category_column: str,
