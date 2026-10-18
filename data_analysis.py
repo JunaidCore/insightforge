@@ -130,6 +130,16 @@ def get_correlation(df: pd.DataFrame, column_a: str, column_b: str) -> float:
     return round(float(pairs[column_a].corr(pairs[column_b], method="pearson")), 4)
 
 
+def round_column(df: pd.DataFrame, column: str, decimals: int = 2) -> list:
+    """Return the column values rounded to the given number of decimals, with None for missing values."""
+    _validate_numeric_column(df, column)
+
+    if decimals < 0:
+        raise ValueError("decimals must not be negative")
+
+    return [None if pd.isna(value) else round(float(value), 2) for value in df[column]]
+
+
 def get_highest_value_row(
     df: pd.DataFrame,
     column: str,
