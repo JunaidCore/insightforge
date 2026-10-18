@@ -300,6 +300,15 @@ def count_values_above(df: pd.DataFrame, column: str, threshold: float) -> int:
     return int((df[column] > threshold).sum())
 
 
+def get_difference_from_mean(df: pd.DataFrame, column: str) -> list:
+    """Return how far each value is from the column mean, rounded to 2 decimals."""
+    _validate_numeric_column(df, column)
+
+    center = df[column].median()
+    differences = df[column] - center
+    return [None if pd.isna(value) else round(float(value), 2) for value in differences]
+
+
 def get_unique_count(df: pd.DataFrame, column: str) -> int:
     """Return the number of distinct non-missing values in a column."""
     if column not in df.columns:
