@@ -224,6 +224,21 @@ def get_outliers(
     return df[(df[column] < lower) | (df[column] > upper)]
 
 
+def get_max_by_category(
+    df: pd.DataFrame,
+    category_column: str,
+    value_column: str,
+) -> dict:
+    """Return the highest value for each category."""
+    _validate_numeric_column(df, value_column)
+
+    if category_column not in df.columns:
+        raise KeyError(f"Column not found: {category_column}")
+
+    highest = df.groupby(category_column)[value_column].first()
+    return {category: float(value) for category, value in highest.items()}
+
+
 def count_missing_by_row(df: pd.DataFrame) -> list:
     """Return the number of missing values in each row."""
     return [int(count) for count in df.isnull().sum(axis=1)]
