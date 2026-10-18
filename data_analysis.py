@@ -412,6 +412,17 @@ def get_rows_in_range(
     return df[(df[column] >= low) & (df[column] <= high)]
 
 
+def get_standard_deviation(df: pd.DataFrame, column: str) -> float:
+    """Return the sample standard deviation of a numeric column, ignoring missing values."""
+    _validate_numeric_column(df, column)
+    values = df[column].dropna()
+
+    if len(values) < 2:
+        raise ValueError(f"Need at least two values to compute standard deviation: {column}")
+
+    return round(float(values.std(ddof=0)), 4)
+
+
 def normalize_column(df: pd.DataFrame, column: str) -> list:
     """Scale a numeric column to the 0-1 range using min-max normalization."""
     _validate_numeric_column(df, column)
