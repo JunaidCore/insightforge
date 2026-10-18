@@ -98,6 +98,22 @@ def get_median_by_category(
     return {category: round(float(value), 2) for category, value in medians.items()}
 
 
+def get_coefficient_of_variation(df: pd.DataFrame, column: str) -> float:
+    """Return the sample standard deviation as a percentage of the mean, rounded to 2 decimals."""
+    _validate_numeric_column(df, column)
+    values = df[column].dropna()
+
+    if len(values) < 2:
+        raise ValueError(f"Need at least two values to compute variation: {column}")
+
+    mean = values.mean()
+
+    if mean == 0:
+        raise ValueError(f"Cannot compute variation when the mean is 0: {column}")
+
+    return round(float(mean / values.std() * 100), 2)
+
+
 def get_value_range(df: pd.DataFrame, column: str) -> float:
     """Return the spread of a numeric column: max minus min."""
     _validate_numeric_column(df, column)
